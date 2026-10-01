@@ -2,7 +2,7 @@ import { Buffer } from 'node:buffer'
 import { createHash, randomBytes, randomUUID } from 'node:crypto'
 import { KINDLE_LOCALES } from './locales.js'
 import type { AuthSession, KindleCookie, KindleCredentials, KindleLocale } from './types.js'
-import { KindleApiError, base64nopad, base64url, toHexString } from './utils.js'
+import { KindleApiError, amazonRefusalOf, base64nopad, base64url, toHexString } from './utils.js'
 
 /**
  * Who the device says it is: the Kindle app for iPhone.
@@ -130,7 +130,7 @@ export const register = async (
   if (!response.ok) {
     throw new KindleApiError(
       'registration',
-      `Device registration failed: ${response.status} ${response.statusText}`,
+      `Device registration failed: ${await amazonRefusalOf(response)}`,
     )
   }
 

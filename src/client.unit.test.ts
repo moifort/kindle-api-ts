@@ -92,4 +92,28 @@ describe('register', () => {
     expect(failure).toBeInstanceOf(KindleApiError)
     expect(failure.kind).toBe('registration')
   })
+
+  test("carries Amazon's own reason for the refusal", async () => {
+    globalThis.fetch = mock(
+      async () =>
+        new Response(
+          JSON.stringify({
+            response: {
+              error: {
+                code: 'InvalidValue',
+                index: 'opaque',
+                message: 'One or more provided values are invalid.',
+              },
+            },
+          }),
+          { status: 400, statusText: 'Bad Request' },
+        ),
+    ) as unknown as typeof fetch
+
+    const failure = await register('the-code', session).catch((error) => error)
+
+    expect(failure.message).toBe(
+      'Device registration failed: 400 Bad Request: InvalidValue — One or more provided values are invalid.',
+    )
+  })
 })

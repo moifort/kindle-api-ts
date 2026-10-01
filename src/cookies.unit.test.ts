@@ -72,6 +72,22 @@ describe('websiteCookies', () => {
     expect(failure.kind).toBe('cookie-exchange')
   })
 
+  test("carries Amazon's own reason for the refusal", async () => {
+    globalThis.fetch = mock(
+      async () =>
+        new Response(
+          JSON.stringify({ error: 'invalid_grant', error_description: 'Refresh token expired' }),
+          { status: 400 },
+        ),
+    ) as unknown as typeof fetch
+
+    const failure = await websiteCookies(credentials).catch((error) => error)
+
+    expect(failure.message).toBe(
+      'Cookie exchange failed: 400: invalid_grant — Refresh token expired',
+    )
+  })
+
   test('refuses an exchange that minted nothing', async () => {
     globalThis.fetch = mock(async () => Response.json({ response: {} })) as unknown as typeof fetch
 

@@ -1,6 +1,6 @@
 {
   "name": "kindle-api-ts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A typed TypeScript client for an Amazon Kindle library — device sign-in, website cookies, and the books you own with their read status",
   "type": "module",
   "main": "./dist/index.js",

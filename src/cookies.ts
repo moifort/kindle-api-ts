@@ -1,7 +1,7 @@
 import { DEVICE } from './client.js'
 import { KINDLE_LOCALES } from './locales.js'
 import type { KindleCookie, KindleCredentials } from './types.js'
-import { KindleApiError } from './utils.js'
+import { KindleApiError, amazonRefusalOf } from './utils.js'
 
 type ExchangeAnswer = {
   response?: {
@@ -44,7 +44,7 @@ export const websiteCookies = async (credentials: KindleCredentials): Promise<Ki
   if (!response.ok) {
     throw new KindleApiError(
       'cookie-exchange',
-      `Cookie exchange failed: ${response.status} ${response.statusText}`,
+      `Cookie exchange failed: ${await amazonRefusalOf(response)}`,
     )
   }
 
