@@ -19,6 +19,11 @@ export type LocaleConfig = {
   marketplaceId: string
   /** The country code Amazon's sign-in pages are named after */
   countryCode: string
+  /**
+   * The sign-in page a Kindle device signs in through: the store's own generic
+   * one. Amazon answers 404 to `amzn_kindle_ios_<cc>`, which no app uses.
+   */
+  assocHandle: string
 }
 
 /** A sign-in in flight: what `register` needs to finish what `login` started */

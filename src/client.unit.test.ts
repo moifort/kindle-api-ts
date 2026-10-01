@@ -14,7 +14,9 @@ describe('login', () => {
 
     expect(url.origin + url.pathname).toBe('https://www.amazon.fr/ap/signin')
     expect(url.searchParams.get('marketPlaceId')).toBe('A13V1IB3VIYZZH')
-    expect(url.searchParams.get('openid.assoc_handle')).toBe('amzn_kindle_ios_fr')
+    // Amazon answers 404 to `amzn_kindle_ios_fr`: the store's generic page is the one.
+    expect(url.searchParams.get('openid.assoc_handle')).toBe('frflex')
+    expect(url.searchParams.has('pageId')).toBe(false)
     expect(url.searchParams.get('openid.oa2.code_challenge_method')).toBe('S256')
     expect(url.searchParams.get('openid.return_to')).toBe(landingUrlOf('fr'))
   })
