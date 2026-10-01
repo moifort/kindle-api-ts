@@ -1,0 +1,42 @@
+{
+  "name": "kindle-api-ts",
+  "version": "0.1.0",
+  "description": "A typed TypeScript client for an Amazon Kindle library — device sign-in, website cookies, and the books you own with their read status",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "bun run build:js && bun run build:types",
+    "build:js": "bun build ./src/index.ts --outdir ./dist --target node --format esm",
+    "build:types": "tsc -p tsconfig.build.json",
+    "test": "bun test",
+    "lint": "bunx biome check",
+    "lint:fix": "bunx biome check --write",
+    "prepublishOnly": "bun run build"
+  },
+  "keywords": ["kindle", "ebook", "amazon", "library", "typescript", "pkce", "oauth"],
+  "author": "Thibaut",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moifort/kindle-api-ts.git"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "zod": "^3.24.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/bun": "^1.2.0",
+    "typescript": "^5.7.0"
+  }
+}

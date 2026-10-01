@@ -1,0 +1,93 @@
+import { afterEach, describe, expect, mock, test } from 'bun:test'
+import { DEVICE, landingUrlOf, login, register } from './client'
+import { KindleApiError } from './utils'
+
+const realFetch = globalThis.fetch
+afterEach(() => {
+  globalThis.fetch = realFetch
+})
+
+describe('login', () => {
+  test('opens a Kindle sign-in on the retail store of the locale', async () => {
+    const { loginUrl } = await login('fr')
+    const url = new URL(loginUrl)
+
+    expect(url.origin + url.pathname).toBe('https://www.amazon.fr/ap/signin')
+    expect(url.searchParams.get('marketPlaceId')).toBe('A13V1IB3VIYZZH')
+    expect(url.searchParams.get('openid.assoc_handle')).toBe('amzn_kindle_ios_fr')
+    expect(url.searchParams.get('openid.oa2.code_challenge_method')).toBe('S256')
+    expect(url.searchParams.get('openid.return_to')).toBe(landingUrlOf('fr'))
+  })
+
+  test('names a Kindle device in the client id', async () => {
+    const { loginUrl, session } = await login('com')
+    const clientId = new URL(loginUrl).searchParams.get('openid.oa2.client_id') ?? ''
+    const decoded = Buffer.from(clientId.replace('device:', ''), 'hex').toString('utf-8')
+
+    expect(decoded).toBe(`${session.serial}#${DEVICE.type}`)
+  })
+
+  test('hands out the three cookies to plant, on the store domain', async () => {
+    const { cookies } = await login('co.uk')
+
+    expect(cookies.map(({ name }) => name)).toEqual(['frc', 'map-md', 'amzn-app-id'])
+    for (const cookie of cookies) expect(cookie.domain).toBe('.amazon.co.uk')
+  })
+
+  test('never reuses a session', async () => {
+    const a = await login('fr')
+    const b = await login('fr')
+
+    expect(a.session.serial).not.toBe(b.session.serial)
+    expect(a.session.codeVerifier).not.toBe(b.session.codeVerifier)
+  })
+})
+
+describe('register', () => {
+  const session = {
+    codeVerifier: 'verifier',
+    serial: 'SERIAL',
+    locale: 'fr' as const,
+    createdAt: new Date(),
+  }
+
+  test('keeps the refresh token and the device key, and no access token', async () => {
+    let sent: { url: string; body: Record<string, unknown> } | undefined
+    globalThis.fetch = mock(async (url: string | URL | Request, init?: RequestInit) => {
+      sent = { url: String(url), body: JSON.parse(String(init?.body)) }
+      return Response.json({
+        response: {
+          success: {
+            tokens: {
+              bearer: { access_token: 'access', refresh_token: 'Atnr|refresh', expires_in: '3600' },
+              mac_dms: { adp_token: '{adp}', device_private_key: 'key' },
+            },
+          },
+        },
+      })
+    }) as unknown as typeof fetch
+
+    const credentials = await register('the-code', session)
+
+    expect(sent?.url).toBe('https://api.amazon.fr/auth/register')
+    expect((sent?.body.registration_data as { device_type: string }).device_type).toBe(DEVICE.type)
+    expect(credentials).toEqual({
+      refreshToken: 'Atnr|refresh',
+      adpToken: '{adp}',
+      devicePrivateKey: 'key',
+      serial: 'SERIAL',
+      locale: 'fr',
+    })
+  })
+
+  test('says Amazon refused the device', async () => {
+    globalThis.fetch = mock(
+      async () => new Response('', { status: 403, statusText: 'Forbidden' }),
+    ) as unknown as typeof fetch
+
+    const failure = await register('the-code', session).catch((error) => error)
+
+    expect(failure).toBeInstanceOf(KindleApiError)
+    expect(failure.kind).toBe('registration')
+  })
+})

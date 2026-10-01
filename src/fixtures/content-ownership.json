@@ -1,0 +1,61 @@
+{
+  "GetContentOwnershipData": {
+    "hasMoreItems": false,
+    "numberOfItems": 4,
+    "success": false,
+    "items": [
+      {
+        "asin": "B0TESTAAA1",
+        "title": "Les Veilleurs (Tome 3) - L'Hiver",
+        "authors": "Camille Fabre",
+        "sortableAuthors": "Fabre, Camille",
+        "bookProducerDetails": [
+          { "asin": "B0AUTHOR01", "name": "Camille Fabre", "role": "author" },
+          { "asin": "B0PUBLISH1", "name": "Éditions du Phare", "role": "publisher" }
+        ],
+        "productImage": "https://m.media-amazon.com/images/I/91TestCoverA.jpg",
+        "readStatus": "READ",
+        "originType": "Purchase",
+        "category": "KindleEBook",
+        "udlCategory": "KindleEBook",
+        "contentCategoryType": "Ebook",
+        "acquiredDate": "14 septembre 2026",
+        "acquiredTime": 1789387902805,
+        "isPurchased": true
+      },
+      {
+        "asin": "B0TESTDICT",
+        "title": "Dictionnaire de test",
+        "authors": "Éditions du Phare",
+        "bookProducerDetails": [],
+        "productImage": "https://m.media-amazon.com/images/I/41TestDict.jpg",
+        "readStatus": "UNKNOWN",
+        "originType": "KindleDictionary",
+        "category": "KindleEBook",
+        "udlCategory": "KindleEBook",
+        "acquiredTime": 1500000000000,
+        "isPurchased": false
+      },
+      {
+        "asin": "B0TESTSAMP",
+        "title": "Un extrait",
+        "authors": "Jules Marin",
+        "productImage": null,
+        "readStatus": "UNKNOWN",
+        "originType": "Sample",
+        "category": "KindleEBook",
+        "udlCategory": "KindleEBookSample",
+        "acquiredTime": 1788000000000
+      },
+      {
+        "asin": "B0TESTPRIM",
+        "title": "Deux voix",
+        "authors": "Ana Duval, Paul Rey",
+        "readStatus": "UNKNOWN",
+        "originType": "Prime",
+        "category": "KindleEBook",
+        "udlCategory": "KindleEBook"
+      }
+    ]
+  }
+}
