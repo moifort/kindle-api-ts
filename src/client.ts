@@ -17,7 +17,7 @@ export const DEVICE = {
   appVersion: '7.21',
   softwareVersion: '1210000000',
   bundleId: 'com.amazon.Lassen',
-  name: '%FIRST_NAME%%FIRST_NAME_POSSESSIVE_STRING%%DUPE_STRATEGY_1ST%Kindle for iPhone',
+  name: 'Kindle for iPhone',
 } as const
 
 /**
@@ -90,12 +90,20 @@ export const landingUrlOf = (locale: KindleLocale) =>
  * Register the device with the authorization code the landing URL carried.
  *
  * @param authorizationCode - The `openid.oa2.authorization_code` of the landing URL
+ * The device is named after `deviceName` and the start of its serial. Amazon
+ * refuses a name the account already has (`DuplicateDeviceName`) and does not
+ * number duplicates for this device type, so a second sign-in on the same
+ * account needs a name of its own.
+ *
+ * @param authorizationCode - The `openid.oa2.authorization_code` of the landing URL
  * @param session - The session `login` returned
+ * @param options.deviceName - What the account's device list calls it, before the serial
  * @throws KindleApiError (`registration`) when Amazon refuses the device
  */
 export const register = async (
   authorizationCode: string,
   session: AuthSession,
+  { deviceName = DEVICE.name }: { deviceName?: string } = {},
 ): Promise<KindleCredentials> => {
   const config = KINDLE_LOCALES[session.locale]
   const body = {
@@ -106,7 +114,7 @@ export const register = async (
       app_version: DEVICE.appVersion,
       device_serial: session.serial,
       device_type: DEVICE.type,
-      device_name: DEVICE.name,
+      device_name: `${deviceName} ${session.serial.slice(0, 4)}`,
       os_version: '18.0',
       software_version: DEVICE.softwareVersion,
       device_model: 'iPhone',

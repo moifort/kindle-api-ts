@@ -29,7 +29,7 @@ const titles = await library(credentials)
 |---|---|
 | `login(locale)` | The PKCE sign-in URL for a Kindle-for-iPhone device, its session, the cookies to plant |
 | `landingUrlOf(locale)` | The redirect that carries the authorization code |
-| `register(code, session)` | Registers the device; returns `KindleCredentials` (no access token: nothing needs one) |
+| `register(code, session, { deviceName? })` | Registers the device, named `<deviceName> <first 4 of serial>` (default `Kindle for iPhone`); returns `KindleCredentials` (no access token: nothing needs one) |
 | `websiteCookies(credentials)` | Fresh `amazon.<domain>` cookies, minted from the refresh token |
 | `library(credentials)` | Every title on the account: ASIN, title, authors, cover, `readStatus`, `originType`, `category`, `acquiredAt` |
 | `readLibrary(locale, cookies)` | The same, with cookies already at hand |

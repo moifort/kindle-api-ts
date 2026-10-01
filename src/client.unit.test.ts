@@ -82,6 +82,24 @@ describe('register', () => {
     })
   })
 
+  test('names every device apart, so a second sign-in is no duplicate', async () => {
+    const names: string[] = []
+    globalThis.fetch = mock(async (_url: string | URL | Request, init?: RequestInit) => {
+      const body = JSON.parse(String(init?.body)) as { registration_data: { device_name: string } }
+      names.push(body.registration_data.device_name)
+      return new Response('', { status: 400 })
+    }) as unknown as typeof fetch
+
+    await register('the-code', { ...session, serial: 'A1B2C3D4E5F6' }).catch(() => {})
+    await register(
+      'the-code',
+      { ...session, serial: 'F6E5D4C3B2A1' },
+      { deviceName: 'Shiori' },
+    ).catch(() => {})
+
+    expect(names).toEqual(['Kindle for iPhone A1B2', 'Shiori F6E5'])
+  })
+
   test('says Amazon refused the device', async () => {
     globalThis.fetch = mock(
       async () => new Response('', { status: 403, statusText: 'Forbidden' }),
