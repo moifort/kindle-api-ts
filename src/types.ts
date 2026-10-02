@@ -64,6 +64,13 @@ export type ReadStatus = 'READ' | 'UNKNOWN'
 export type KindleTitle = {
   asin: string
   title: string
+  /**
+   * Amazon's sort key for the title: lowercased, a leading article moved to the
+   * end, and — on a store selling the edition as foreign to it — the edition's
+   * language appended, `"powerless tome 3 fearless french edition"`. Left as
+   * Amazon writes it.
+   */
+  sortableTitle?: string
   /** In reading order — "Lauren Roberts", not "Roberts, Lauren" */
   authors: string[]
   coverUrl?: string

@@ -19,6 +19,7 @@ const ajaxPath = '/hz/mycd/digital-console/ajax'
 const itemSchema = z.object({
   asin: z.string(),
   title: z.string(),
+  sortableTitle: z.string().optional().nullable(),
   authors: z.string().optional().nullable(),
   bookProducerDetails: z
     .array(z.object({ name: z.string().optional(), role: z.string().optional() }))
@@ -164,6 +165,7 @@ export const pageOf = (answer: unknown): { items: Item[]; total?: number } => {
 export const titleOf = (item: Item): KindleTitle => ({
   asin: item.asin,
   title: item.title.trim(),
+  sortableTitle: item.sortableTitle?.trim() || undefined,
   authors: authorsOf(item),
   coverUrl: item.productImage || undefined,
   readStatus: readStatusOf(item.readStatus),

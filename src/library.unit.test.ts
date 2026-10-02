@@ -42,6 +42,7 @@ describe('titleOf', () => {
     expect(titleOf(purchase)).toEqual({
       asin: 'B0TESTAAA1',
       title: "Les Veilleurs (Tome 3) - L'Hiver",
+      sortableTitle: "veilleurs tome 3 l'hiver french edition, les",
       authors: ['Camille Fabre'],
       coverUrl: 'https://m.media-amazon.com/images/I/91TestCoverA.jpg',
       readStatus: 'READ',
@@ -60,8 +61,9 @@ describe('titleOf', () => {
     expect(titleOf(sample).category).toBe('KindleEBookSample')
   })
 
-  test('has no cover and no date where Amazon gives none', () => {
+  test('has no cover, no sort key and no date where Amazon gives none', () => {
     expect(titleOf(sample).coverUrl).toBeUndefined()
+    expect(titleOf(sample).sortableTitle).toBeUndefined()
     expect(titleOf(prime).acquiredAt).toBeUndefined()
   })
 })
