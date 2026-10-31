@@ -33,6 +33,7 @@ const titles = await library(credentials)
 | `websiteCookies(credentials)` | Fresh `amazon.<domain>` cookies, minted from the refresh token |
 | `library(credentials)` | Every title on the account: ASIN, title, `sortableTitle`, authors, cover, `readStatus`, `originType`, `category`, `acquiredAt` |
 | `readLibrary(locale, cookies)` | The same, with cookies already at hand |
+| `readingPosition(credentials, asin)` | Where Whispersync last saw the reader in a title, in the book's own units; `undefined` on a title with no sidecar or no position. Amazon gives no length here, so a page or a share is an estimate |
 
 Every failure is a `KindleApiError` whose `kind` is `registration`, `cookie-exchange`,
 `csrf-missing`, `unexpected-shape` or `http`.

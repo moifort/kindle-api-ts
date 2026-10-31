@@ -3,6 +3,7 @@ export { DEVICE, landingUrlOf, login, register } from './client.js'
 export { cookieHeaderOf, websiteCookies } from './cookies.js'
 // Data
 export { library, readLibrary } from './library.js'
+export { readingPosition } from './position.js'
 // Config
 export { KINDLE_LOCALES } from './locales.js'
 export { KindleApiError } from './utils.js'
